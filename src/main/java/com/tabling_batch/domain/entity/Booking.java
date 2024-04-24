@@ -1,6 +1,6 @@
 package com.tabling_batch.domain.entity;
 
-import com.tabling_batch.domain.util.Timestamp;
+import com.tabling_batch.util.Timestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
