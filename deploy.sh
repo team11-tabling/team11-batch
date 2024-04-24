@@ -19,4 +19,4 @@ else
 fi
 
 echo "> Deploy - $JAR_PATH "
-nohup java -jar $JAR_PATH --job.name=userGradeJob > /home/ec2-user/nohub.out 2> /home/ec2-user/nohub.out < /home/ec2-user/nohub.out &
+nohup java -jar $JAR_PATH > /home/ec2-user/nohub.out 2> /home/ec2-user/nohub.out < /home/ec2-user/nohub.out &
