@@ -18,5 +18,6 @@ else
   sleep 5
 fi
 
+cp /home/ec2-user/tabling/build/libs/tabling_batch-0.0.1-SNAPSHOT.jar /var/lib/jenkins/workspace/usergrade-batch/tabling_batch-0.0.1-SNAPSHOT.jar
 echo "> Deploy - $JAR_PATH "
 nohup java -jar $JAR_PATH > /home/ec2-user/nohub.out 2> /home/ec2-user/nohub.out < /home/ec2-user/nohub.out &
