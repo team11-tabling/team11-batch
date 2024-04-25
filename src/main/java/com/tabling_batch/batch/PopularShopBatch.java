@@ -68,6 +68,7 @@ public class PopularShopBatch {
         .dataSource(dataSource)
         .sql("select shop_id, count(shop_id) as shop_booking_count "
             + "from booking "
+            + "where state='DONE' "
             + "group by shop_id")
         .rowMapper(new BeanPropertyRowMapper<>(ShopBookingCountDto.class))
         .build();

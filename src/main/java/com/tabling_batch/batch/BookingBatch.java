@@ -40,7 +40,7 @@ public class BookingBatch {
   public Job bookingJob(JobRepository jobRepository,PlatformTransactionManager transactionManager) {
     return new JobBuilder("bookingJob", jobRepository)
         .start(bookingStep(null, jobRepository, transactionManager))
-//        .next(deleteBookingStep(jobRepository,transactionManager))
+        .next(deleteBookingStep(jobRepository,transactionManager))
         .build();
   }
 

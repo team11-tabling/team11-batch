@@ -70,6 +70,7 @@ public class UserGradeBatch {
         .dataSource(dataSource)
         .sql("select user_id, count(user_id) as user_booking_count "
             + "from booking "
+            + "where state='DONE' "
             + "group by user_id")
         .rowMapper(new BeanPropertyRowMapper<>(UserBookingCountDto.class))
         .build();
