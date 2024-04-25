@@ -13,4 +13,5 @@ import lombok.ToString;
 public class UserGradeDto {
   private Long userId;
   private String grade;
+
 }
