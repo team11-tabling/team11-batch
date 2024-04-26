@@ -95,4 +95,5 @@ public class BookingBatch {
         .footerCallback(writer -> writer.write(LocalDate.now() + "----------\n"))
         .build();
   }
+
 }
