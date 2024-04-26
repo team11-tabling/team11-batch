@@ -39,7 +39,7 @@ public class UserGradeBatch {
 
   @Bean
   public Job userGradeJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, DataSource dataSource) {
-    return new JobBuilder("userGradeJob", jobRepository)
+    return new JobBuilder("userGradeJobs", jobRepository)
         .start(initializeUserStep(null, jobRepository, transactionManager))
         .next(userGradeStep(jobRepository, transactionManager,dataSource))
         .build();
