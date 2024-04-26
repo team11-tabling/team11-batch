@@ -93,9 +93,9 @@ public class UserGradeBatch {
   public ItemProcessor<UserBookingCountDto, UserGradeDto> userGradeItemProcessor1() {
     return item -> {
       String grade;
-      if (item.getUserBookingCount() >= 3) {
+      if (item.getUserBookingCount() >= 2) {
         grade = "Gold";
-      } else if (item.getUserBookingCount() >= 1) {
+      } else if (item.getUserBookingCount() == 1) {
         grade = "Silver";
       } else {
         grade = "Bronze";
