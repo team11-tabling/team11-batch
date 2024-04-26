@@ -41,7 +41,7 @@ public class UserGradeBatch {
   public Job userGradeJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, DataSource dataSource) {
     return new JobBuilder("userGradeJob", jobRepository)
         .start(initializeUserStep(null, jobRepository, transactionManager))
-//        .next(userGradeStep(jobRepository, transactionManager,dataSource))
+        .next(userGradeStep(jobRepository, transactionManager,dataSource))
         .build();
   }
 
