@@ -91,7 +91,7 @@ public class PopularShopBatch {
   public ItemProcessor<ShopBookingCountDto, PopularShopDto> popularShopItemProcessor1() {
     return item -> {
       boolean popularShop = false;
-      if (item.getShopBookingCount() >= 50) {
+      if (item.getShopBookingCount() >= 2) {
         popularShop = true;
       }
 
@@ -102,7 +102,7 @@ public class PopularShopBatch {
   @Bean
   public ItemProcessor<PopularShopDto, Shop> popularShopItemProcessor2() {
     return item -> {
-      Shop shop = findByShopId(item.getShopId());
+      Shop shop = entityManager.find(Shop.class, item.getShopId());
 
       if (shop != null) {
         shop.popularShopUpdate(item.isPopularShop());
@@ -117,12 +117,5 @@ public class PopularShopBatch {
     return new JpaItemWriterBuilder<Shop>()
         .entityManagerFactory(entityManager.getEntityManagerFactory())
         .build();
-  }
-
-  public Shop findByShopId(Object value) {
-    String jpql = "SELECT s FROM Shop s WHERE s.shopId" + "= :value";
-    return entityManager.createQuery(jpql, Shop.class)
-        .setParameter("value", value)
-        .getSingleResult();
   }
 }
