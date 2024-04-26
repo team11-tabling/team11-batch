@@ -38,8 +38,8 @@ public class UserGradeBatch {
   private final int chunkSize = 100;
 
   @Bean
-  public Job userGradeJobs(JobRepository jobRepository, PlatformTransactionManager transactionManager, DataSource dataSource) {
-    return new JobBuilder("userGradeJobs", jobRepository)
+  public Job userGradeJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, DataSource dataSource) {
+    return new JobBuilder("userGradeJob", jobRepository)
         .start(initializeUserStep(null, jobRepository, transactionManager))
         .next(userGradeStep(jobRepository, transactionManager,dataSource))
         .build();
