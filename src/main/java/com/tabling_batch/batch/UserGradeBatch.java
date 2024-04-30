@@ -35,7 +35,7 @@ public class UserGradeBatch {
 
   private final EntityManager entityManager;
   private final InitializeUserTasklet initializeUserTasklet;
-  private final int chunkSize = 100;
+  private final int chunkSize = 1000;
 
   @Bean
   public Job userGradeJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, DataSource dataSource) {
@@ -93,9 +93,9 @@ public class UserGradeBatch {
   public ItemProcessor<UserBookingCountDto, UserGradeDto> userGradeItemProcessor1() {
     return item -> {
       String grade;
-      if (item.getUserBookingCount() >= 2) {
+      if (item.getUserBookingCount() >= 10) {
         grade = "Gold";
-      } else if (item.getUserBookingCount() == 1) {
+      } else if (item.getUserBookingCount() >= 5) {
         grade = "Silver";
       } else {
         grade = "Bronze";

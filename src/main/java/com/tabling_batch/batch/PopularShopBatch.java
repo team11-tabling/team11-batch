@@ -33,7 +33,7 @@ public class PopularShopBatch {
 
   private final EntityManager entityManager;
   private final InitializeShopTasklet initializeShopTasklet;
-  private final int chunkSize = 100;
+  private final int chunkSize = 1000;
 
   @Bean
   public Job popularShopJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, DataSource dataSource) {
@@ -91,7 +91,7 @@ public class PopularShopBatch {
   public ItemProcessor<ShopBookingCountDto, PopularShopDto> popularShopItemProcessor1() {
     return item -> {
       boolean popularShop = false;
-      if (item.getShopBookingCount() >= 2) {
+      if (item.getShopBookingCount() >= 50) {
         popularShop = true;
       }
 

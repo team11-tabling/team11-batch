@@ -34,13 +34,13 @@ public class BookingBatch {
   private final EntityManagerFactory entityManagerFactory;
   private final DeleteBookingTasklet deleteBookingTasklet;
 
-  private final int chunkSize = 100;
+  private final int chunkSize = 1000;
 
   @Bean
   public Job bookingJob(JobRepository jobRepository,PlatformTransactionManager transactionManager) {
     return new JobBuilder("bookingJob", jobRepository)
         .start(bookingStep(null, jobRepository, transactionManager))
-//        .next(deleteBookingStep(jobRepository,transactionManager))
+        .next(deleteBookingStep(jobRepository,transactionManager))
         .build();
   }
 
@@ -55,12 +55,12 @@ public class BookingBatch {
         .build();
   }
 
-//  @Bean
-//  public Step deleteBookingStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-//    return new StepBuilder("deleteBookingStep", jobRepository)
-//        .tasklet(deleteBookingTasklet, transactionManager)
-//        .build();
-//  }
+  @Bean
+  public Step deleteBookingStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    return new StepBuilder("deleteBookingStep", jobRepository)
+        .tasklet(deleteBookingTasklet, transactionManager)
+        .build();
+  }
 
   @Bean
   public JpaPagingItemReader<Booking> bookingItemReader() {
