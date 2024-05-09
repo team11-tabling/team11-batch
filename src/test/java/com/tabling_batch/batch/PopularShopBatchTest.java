@@ -29,7 +29,7 @@ class PopularShopBatchTest {
   public void testPopularShopJob() throws Exception {
     // Given
     JobParameters jobParameters = new JobParametersBuilder()
-        .addString("date", "2023-04-30")
+        .addString("date", "2024-05-09")
         .toJobParameters();
 
     // When
