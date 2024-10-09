@@ -3,8 +3,11 @@ package com.tabling_batch.batch;
 import com.tabling_batch.batch.dto.BookingCsvDto;
 import com.tabling_batch.batch.tasklet.DeleteBookingTasklet;
 import com.tabling_batch.domain.entity.Booking;
-import jakarta.persistence.EntityManagerFactory;
+import com.tabling_batch.domain.entity.BookingType;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -14,8 +17,10 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.item.database.Order;
+import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
+import org.springframework.batch.item.database.support.MySqlPagingQueryProvider;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
@@ -31,7 +36,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class BookingBatch {
 
-  private final EntityManagerFactory entityManagerFactory;
+  private final DataSource dataSource;
   private final DeleteBookingTasklet deleteBookingTasklet;
 
   private final int chunkSize = 1000;
@@ -63,12 +68,29 @@ public class BookingBatch {
   }
 
   @Bean
-  public JpaPagingItemReader<Booking> bookingItemReader() {
-    return new JpaPagingItemReaderBuilder<Booking>()
+  public JdbcPagingItemReader<Booking> bookingItemReader() {
+    MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
+    queryProvider.setSelectClause("SELECT *");
+    queryProvider.setFromClause("FROM booking");
+
+    Map<String, Order> sortKeys = new HashMap<>();
+    sortKeys.put("id", Order.ASCENDING);
+    queryProvider.setSortKeys(sortKeys);
+
+    return new JdbcPagingItemReaderBuilder<Booking>()
         .name("bookingItemReader")
-        .entityManagerFactory(entityManagerFactory)
+        .dataSource(dataSource)
         .pageSize(chunkSize)
-        .queryString("SELECT b FROM Booking b")
+        .queryProvider(queryProvider)
+        .rowMapper((rs, rowNum) -> new Booking(
+            rs.getLong("id"),
+            rs.getLong("user_id"),
+            rs.getLong("shop_id"),
+            rs.getLong("ticket_number"),
+            BookingType.valueOf(rs.getString("state")),
+            rs.getTimestamp("reserved_datetime").toLocalDateTime(),
+            rs.getInt("reserved_party")
+        ))
         .build();
   }
 
@@ -95,5 +117,4 @@ public class BookingBatch {
         .footerCallback(writer -> writer.write(LocalDate.now() + "----------\n"))
         .build();
   }
-
 }
